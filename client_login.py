@@ -4,7 +4,7 @@ import view
 
 class ClientLogin :
     def __init__(self) :
-        self.fields = ["USERNAME", "PASSWORD"]
+        self.fields = ["USERNAME: ", "PASSWORD: "]
 
     def run(self, client_socket) :
         view.client_login()
@@ -12,4 +12,4 @@ class ClientLogin :
             l = raw_input(x)
             client_socket.send(l)
         response = client_socket.recv(1024)
-        return response
+        return int(response)

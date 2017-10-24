@@ -15,25 +15,26 @@ def show_new_client(host, port) :
 def action_not_found() :
     print("A acao escolhida nao existe")
 
-def successfull(connection=None) :
-    msg = "A operação foi realizada com sucesso!\n"
+def create_successfull(connection=None) :
+    msg = "A conta foi criada com sucesso!\n"
     if connection :
         connection.send(msg)
     else :
         print(msg)
 
-def not_successfull(connection, err) :
-    msg = "A operação não foi realizada devido ao erro abaixo\n"
+def create_not_successfull(connection, err) :
+    msg = "A conta não foi criada devido ao erro abaixo\n"
     err = ">>> " + err + "\n"
     msg = msg + err
     connection.send(msg)
 
-def login_successfull() :
+def login_successfull(name=None) :
     print("Login efetuado com sucesso!")
+    if name :
+        print("Bem-vindo", name)
 
 def login_not_successfull(response) :
     if response == 0 :
         print("O username digitado não existe!")
     elif response == 2 :
         print("Senha incorreta!")
-

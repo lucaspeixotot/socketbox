@@ -2,6 +2,7 @@
 
 import socket
 import view # implementar view
+import messages
 from client_create_account import ClientCreateAccount
 from client_login import ClientLogin
 
@@ -27,6 +28,7 @@ class Client :
                 cca.run(self.client_socket)
                 response = self.client_socket.recv(1024)
                 print(response)
+
             elif opt == '2' :
                 cl = ClientLogin()
                 response = cl.run(self.client_socket)

@@ -6,7 +6,6 @@ class CreateAccount :
     def __init__(self, users) :
         self.key = '1'
         self.users = users
-        self.parse_options = {}
 
 
     def run(self, connection) :
@@ -19,13 +18,13 @@ class CreateAccount :
             password = request[1].split()[1]
             passconf = request[2].split()[1]
             if password == passconf :
-                messages.successfull(connection)
-                messages.successfull()
+                messages.create_successfull(connection)
+                messages.create_successfull()
                 self.users[username] = password
             else :
-                messages.not_successfull(connection, "As senhas digitadas não foram iguais")
+                messages.create_not_successfull(connection, "As senhas digitadas não foram iguais")
         else :
-            messages.not_successfull(connection, "Alguém já possui o username digitado!")
+            messages.create_not_successfull(connection, "Alguém já possui o username digitado!")
 
 # username_pattern = re.compile("USERNAME : [a-zA-Z0-9_.-]+")
 # password_pattern = re.compile("PASSWORD : [a-zA-Z0-9_.-]+")
