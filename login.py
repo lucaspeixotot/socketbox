@@ -3,3 +3,4 @@ class Login :
         self.key = "LOGIN"
 
     def run(self) :
+        pass
