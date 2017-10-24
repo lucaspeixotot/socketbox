@@ -20,6 +20,7 @@ class CreateAccount :
             passconf = request[2].split()[1]
             if password == passconf :
                 messages.successfull(connection)
+                messages.successfull()
                 self.users[username] = password
             else :
                 messages.not_successfull(connection, "As senhas digitadas não foram iguais")

@@ -20,8 +20,9 @@ class ServerSocket :
     def actions_initialize(self, logged_actions, unlogged_actions) :
         self.communication_protocol = {}
         self.communication_protocol[0] = {}
-        self.communication_protocol[0][unlogged_actions[0][0]] = unlogged_actions[0][1]
-        self.communication_protocol[0][unlogged_actions[1][0]] = unlogged_actions[1][1]
+        for x in unlogged_actions :
+            k,v = x
+            self.communication_protocol[0][k] = v
 
     def new_socket_connected(self) :
         connection, addr = self.server_socket.accept()
