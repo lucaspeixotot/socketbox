@@ -16,17 +16,17 @@
 *** type
    This field tell us what are the message type. There are some possibilities
    for this field:
-**** CREATE
+**** create
     When a client want to create an account in SocketBox.
-**** LOGIN
+**** login
     This is a request to sign in the SocketBox. 
-**** UPLOAD
+**** upload
     The user upload a file into your account. 
-**** DOWNLOAD
+**** download
     The user download a file that is contained in your uploaded or shared files.
-**** LIST_FILES 
+**** list-files
     List all uploaded and shared files. 
-**** SHARE_FILE 
+**** share-file
     Share a file with another account. 
 *** hb
    When this field is different of " " it means that server is trying confirm
@@ -34,6 +34,7 @@
 *** ack
    When this field is different of " " it means that server or client are
    confirming some previous message.
+
 ** Body
   This piece of the message will have the content of the message itself. Based
   on message type we have different bodies.
@@ -46,7 +47,7 @@
      Depending of the previous message typed we will have different behaviors.
      The ack body will have two parts *status* and *message*.
      When the previous message type is:
-***** CREATE and LOGIN
+***** create and login
 ****** Successful
       The body will have the status *1014* with a successful message that it
       means that the create or login request was made with succesful. 
@@ -56,7 +57,7 @@
        doesn't exist(login) and the password and password confirmation are
        differents or the typed password was wrong(login), respectively. Of
        cource, with a failed message explain it.
-***** UPLOAD and DOWNLOAD
+***** upload and download
 ****** Successful
        The body will have the status *1024* with a sucessful message that it
        means that the upload or download was made with sucessful.
