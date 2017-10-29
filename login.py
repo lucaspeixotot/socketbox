@@ -4,8 +4,10 @@ class Login :
     def __init__(self, users) :
         self.key = "2"
         self.users = users
+        self.socketuser = []
 
     def run(self, connection) :
+        host, port = connection.getpeername()
         request = []
         for _ in range(2) :
             l = connection.recv(1024)
@@ -18,6 +20,8 @@ class Login :
             connection.send("2")
         else :
             messages.login_successfull(request[0])
+            self.socketuser[port]["account"] = request[0]
+            self.socketuser[port]["status"] = 1
             connection.send("1")
 
 

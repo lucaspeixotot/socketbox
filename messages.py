@@ -38,3 +38,15 @@ def login_not_successfull(response) :
         print("O username digitado não existe!")
     elif response == 2 :
         print("Senha incorreta!")
+
+def sending_file() :
+    print("Enviando arquivo...")
+
+def end_sending_file() :
+    print("Arquivo enviado com sucesso!")
+
+def receiving_file() :
+    print("Recebendo arquivo...")
+
+def end_receiving_file() :
+    print("Arquivo recebido com sucesso!")

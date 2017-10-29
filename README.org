@@ -1,5 +1,70 @@
-SOCKETBOX PROJECT
+*SOCKETBOX PROJECT*
 
 * Introduction
-  Socketbox is a project to computing networking course which have the goal is
+  Socketbox is a project to computing networking course which have the goal to
   learn how to implement sockets.
+
+  
+* Message
+  The message have two pieces: header and body. *Every* message *must* have
+  this two pieces and fit into documentation below.
+** Header
+   Will guide how the message must be read. hb and ack fields are named
+   in this documentation as /special fields/.
+*** content-length
+   Contains the body length message.
+*** type
+   This field tell us what are the message type. There are some possibilities
+   for this field:
+**** create
+    When a client wants to create an account in SocketBox.
+**** login
+    This is a request to sign in the SocketBox. 
+**** upload
+    The user upload a file into your account. 
+**** download
+    The user download a file that is contained in your uploaded or shared files.
+**** list-files
+    List all uploaded and shared files. 
+**** share-file
+    Share a file with another account. 
+*** hb
+   When this field is different of " " it means that the server is trying to confirm
+   the connection with the client.
+*** ack
+   When this field is different of " " it means that the server or client are
+   confirming some previous message.
+
+** Body
+  This piece of the message will have the content of the message itself. Based
+  on message type we have different bodies.
+*** Special fields activated
+    When the special fields are activated we will ignore the type field.
+**** hb
+     We will have just some message to generate a echo in the server and client
+     sockets in order to ensure that connection is not broken. 
+**** ack
+     Depending of the previous message typed we will have different behaviors.
+     The ack body will have two parts *status* and *message*.
+     When the previous message type is:
+***** create and login
+****** Successful
+      The body will have the status *1014* with a successful message that it
+      means that the create or login request was made with succesful. 
+****** Failed
+       The body will have the status *0025* and *0017* that it means that the
+       create or login request failed because an existent username or typed username
+       doesn't exist(login) and the password and password confirmation are
+       differents or the typed password was wrong(login), respectively. Of
+       cource, with a failed message explain it.
+***** upload and download
+****** Successful
+       The body will have the status *1024* with a sucessful message that it
+       means that the upload or download was made with sucessful.
+****** Failed
+       The body will have the status *0000* with a message explain what happens.
+*** Special fields desactivated 
+**** create
+     The body will have the pieces below: 
+
+  

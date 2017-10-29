@@ -3,10 +3,10 @@ import messages
 import re
 
 class CreateAccount :
-    def __init__(self, users) :
+    def __init__(self, users, database) :
         self.key = '1'
         self.users = users
-
+        self.database = database
 
     def run(self, connection) :
         request = []
@@ -21,11 +21,8 @@ class CreateAccount :
                 messages.create_successfull(connection)
                 messages.create_successfull()
                 self.users[username] = password
+                self.database.create_user(username, password)
             else :
                 messages.create_not_successfull(connection, "As senhas digitadas não foram iguais")
         else :
             messages.create_not_successfull(connection, "Alguém já possui o username digitado!")
-
-# username_pattern = re.compile("USERNAME : [a-zA-Z0-9_.-]+")
-# password_pattern = re.compile("PASSWORD : [a-zA-Z0-9_.-]+")
-# password_confirmation_pattern = re.compile("PASSWORD_CONFIRMATION : [a-zA-Z0-9_.-]+")
