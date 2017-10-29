@@ -23,7 +23,7 @@ class Client :
             view.menu_options(self.status[0])
             opt = raw_input("Digite a sua opcao: ")
             self.client_socket.send(opt)
-            self._parse_options.run(int(opt), self.client_socket)
+            self._parse_options.run(opt, self.client_socket)
             print("status client", self.status[0])
         self.client_socket.close()
 

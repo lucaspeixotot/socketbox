@@ -12,6 +12,7 @@ class ParseOptions :
         self._ClientUpload = ClientUpload()
 
         self.unlogged_actions = [(self._ClientLogin.key, self._ClientLogin), (self._ClientCreateAccount.key, self._ClientCreateAccount)]
+
         self.logged_actions = [(self._ClientUpload.key, self._ClientUpload)]
         self.parse_options = {}
         self.parse_options[0] = {}
@@ -19,6 +20,8 @@ class ParseOptions :
 
         for x in self.unlogged_actions :
             k, v = x
+            print(k,v)
+            print(type(k))
             self.parse_options[0][k] = v
 
         for x in self.logged_actions :

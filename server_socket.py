@@ -3,11 +3,12 @@ import socket
 import messages
 import select
 
+BUFFER_SIZE = 1024
+
 class ServerSocket :
     def __init__(self, host="localhost", port=6789) :
         self.host = host
         self.port = port
-        self.buffer_size = 1024
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((self.host, self.port))
@@ -21,6 +22,7 @@ class ServerSocket :
         self.communication_protocol = {}
         self.communication_protocol[0] = {}
         self.communication_protocol[1] = {}
+        print(logged_actions)
         for x in unlogged_actions :
             k,v = x
             self.communication_protocol[0][k] = v
@@ -49,6 +51,7 @@ class ServerSocket :
                     host, port = conn.getpeername()
                     message = conn.recv(self.buffer_size)
                     if message not in self.communication_protocol[self.socketuser[port]["status"]] :
+                        print(self.socketuser)
                         messages.action_not_found()
                     else :
                         self.communication_protocol[self.socketuser[port]["status"]][message].run(conn)

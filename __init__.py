@@ -22,6 +22,7 @@ class SocketBox :
         self.my_server = ServerSocket()
         self.my_server.actions_initialize(self.logged_actions, self.unlogged_actions)
         self.login.socketuser = self.my_server.socketuser
+        self.upload.socketuser = self.my_server.socketuser
         self.my_server.run()
 
 socketbox = SocketBox()

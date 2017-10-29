@@ -6,7 +6,7 @@ import messages
 class ClientLogin :
     def __init__(self, status) :
         self.fields = ["USERNAME: ", "PASSWORD: "]
-        self.key = 2
+        self.key = "2"
         self.status = status
 
     def run(self, client_socket) :
