@@ -1,4 +1,4 @@
--*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import json
 
@@ -9,13 +9,13 @@ def receive(socket, msg_initial='') :
     msg = msg_initial
 
     while msg.find(FLAG_END_MESSAGE) == -1 :
-        msg = msg + socket.recv(BUFFER_SIZE)
+        receiving = socket.recv(BUFFER_SIZE)
+        msg = msg + receiving
 
     begin_message_index = msg.find(FLAG_END_MESSAGE) - 1
     end_message_index = begin_message_index + len(FLAG_END_MESSAGE) 
     rest = msg[end_message_index:]
-    msg = [:begin_message_index]
-
+    msg = msg[:begin_message_index+1]
     return [msg, rest]
 
 def send(socket, msg) :

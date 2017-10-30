@@ -6,13 +6,13 @@ import messages
 from parse_options import ParseOptions
 
 class Client :
-    def __init__(self, host="localhost", port=6789) :
+    def __init__(self, host="localhost", port=12345) :
         self.host = host
         self.port = port
         self.running = 1
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.status = [0]
-        self._parse_options = ParseOptions(self.status)
+        self.parse_options = ParseOptions(self.status)
 
     def connect(self) :
         self.client_socket.connect((self.host, self.port))
@@ -22,8 +22,7 @@ class Client :
             view.apresentation()
             view.menu_options(self.status[0])
             opt = raw_input("Digite a sua opcao: ")
-            self.client_socket.send(opt)
-            self._parse_options.run(opt, self.client_socket)
+            self.parse_options.run(opt, self.client_socket)
             print("status client", self.status[0])
         self.client_socket.close()
 
