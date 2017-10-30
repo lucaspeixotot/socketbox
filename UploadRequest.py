@@ -4,7 +4,7 @@ import os
 import view
 import messages
 
-class ClientUpload :
+class UploadRequest :
     def __init__(self) :
         self.key = '1'
 
