@@ -9,7 +9,7 @@ class ParseOptions :
         self.status = status
         self._LoginRequest = LoginRequest("2", "login", ["username", "password"], self.status)
         self._CreateRequest = CreateRequest("1", "create", ["username", "password", "password_confirmation"])
-        self._UploadRequest = UploadRequest()
+        self._UploadRequest = UploadRequest("1", "upload", ["file_to_be_uploaded"], self.status)
 
         self.unlogged_actions = [(self._LoginRequest.key, self._LoginRequest), (self._CreateRequest.key, self._CreateRequest)]
 
@@ -27,4 +27,4 @@ class ParseOptions :
             self.parse_options[1][k] = v
 
     def run(self, opt, client_socket) :
-        self.parse_options[self.status[0]][opt].run(client_socket)
+        self.parse_options[self.status["logged"]][opt].run(client_socket)

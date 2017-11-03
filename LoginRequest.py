@@ -14,5 +14,5 @@ class LoginRequest(Requests) :
         if body["status"] == "0025" or body["status"] == "0017" :
             messages.login_not_successfull(body["status"])
         else :
-            self.status[0] = 1
+            self.status["logged"], self.status["cur_username"], self.status["cur_password"] = 1, self.content["username"], self.content["password"]
             messages.login_successfull()

@@ -11,7 +11,10 @@ class Client :
         self.port = port
         self.running = 1
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.status = [0]
+        self.status = {}
+        self.status["logged"] = 0
+        self.status["cur_username"] = ""
+        self.status["cur_password"] = ""
         self.parse_options = ParseOptions(self.status)
 
     def connect(self) :
@@ -20,7 +23,7 @@ class Client :
     def run(self) :
         while self.running :
             view.apresentation()
-            view.menu_options(self.status[0])
+            view.menu_options(self.status["logged"])
             opt = raw_input("Digite a sua opcao: ")
             self.parse_options.run(opt, self.client_socket)
         self.client_socket.close()
