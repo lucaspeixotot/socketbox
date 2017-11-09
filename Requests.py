@@ -4,9 +4,8 @@ from Message import Message
 import network
 
 class Requests :
-    def __init__(self, key, message_type, fields) :
+    def __init__(self, key, message_type) :
         self.key = key
-        self.fields = fields
         self.message_type = message_type
 
     def run(self, socket) :
@@ -14,15 +13,15 @@ class Requests :
         for x in self.fields :
             l = raw_input(x + ": ")
             self.content[x] = l
-        msg = self.prepare_message(socket, self.message_type)
+        msg = self.prepare_message(socket)
         network.send(socket, msg)
         self.response(socket)
 
-    def prepare_message(self, socket, type_message) :
+    def prepare_message(self, socket) :
         header ={}
         body = {}
         body["content"] = {}
-        header["type"] = type_message
+        header["type"] = self.message_type
         header["hb"] = ""
         header["ack"] = ""
         body["content"] = self.content

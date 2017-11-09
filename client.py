@@ -6,7 +6,7 @@ import messages
 from parse_options import ParseOptions
 
 class Client :
-    def __init__(self, host="localhost", port=6789) :
+    def __init__(self, host="", port=6789) :
         self.host = host
         self.port = port
         self.running = 1

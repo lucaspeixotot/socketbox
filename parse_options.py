@@ -3,6 +3,7 @@
 from CreateRequest import CreateRequest
 from LoginRequest import LoginRequest
 from UploadRequest import UploadRequest
+from ListFilesRequest import ListFilesRequest
 
 class ParseOptions :
     def __init__(self, status) :
@@ -10,10 +11,11 @@ class ParseOptions :
         self._LoginRequest = LoginRequest("2", "login", ["username", "password"], self.status)
         self._CreateRequest = CreateRequest("1", "create", ["username", "password", "password_confirmation"])
         self._UploadRequest = UploadRequest("1", "upload", ["file_to_be_uploaded"], self.status)
+        self._ListFilesRequest = ListFilesRequest("3", "list_files", self.status)
 
         self.unlogged_actions = [(self._LoginRequest.key, self._LoginRequest), (self._CreateRequest.key, self._CreateRequest)]
 
-        self.logged_actions = [(self._UploadRequest.key, self._UploadRequest)]
+        self.logged_actions = [(self._UploadRequest.key, self._UploadRequest), (self._ListFilesRequest.key, self._ListFilesRequest)]
         self.parse_options = {}
         self.parse_options[0] = {}
         self.parse_options[1] = {}

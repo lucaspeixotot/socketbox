@@ -8,9 +8,9 @@ class Database :
         self.dot = os.getcwd()
 
     def create_folder(self,folderPath) :
-        if not os.path.exists(os.path.dirname(self.dot + folderPath)) :
+        if not os.path.exists(self.dot + folderPath) :
             try :
-                os.makedirs(os.path.dirname(self.dot + folderPath))
+                os.makedirs(self.dot + folderPath)
             except OSError as error :
                 if error.errno != errno.EEXIST :
                     raise
@@ -25,7 +25,7 @@ class Database :
 
     def get_users(self) :
         users = {}
-        if os.path.exists(os.path.dirname(self.dot + "/database/")) :
+        if os.path.exists(self.dot + "/database/") :
             getting = os.listdir(self.dot + "/database/")
             for username in getting :
                 with open("%s/database/%s/password" % (self.dot, username), "r") as f :
@@ -35,39 +35,61 @@ class Database :
 
     def get_files(self, username, file_name) :
         upload_path = self.dot + "/database/" + username + "/uploads"
-        if os.path.exists(os.path.dirname(self.dot + "/database/" + username + "/uploads")) :
+        if os.path.exists(self.dot + "/database/" + username + "/uploads") :
             upload_files = set(os.listdir(upload_files))
             if file_name in upload_path :
                 return True
             else :
                 return False
 
-    def upload_file(self, username, file_name, file_read) :
-        file_name_dir =file_name[:file_name.find(".") if file_name.find(".") != -1 else len(file_name)] 
-        file_path = self.dot + "/database/" + username + "/uploads"
-        if os.path.exists(os.path.dirname(file_path)) :
-            all_files = set(os.listdir(file_path))
-            if file_name not in all_files :
-                with open(file_path + "/" + file_name, "wb") as f :
-                    f.write(file_read)
+    def get_list_files(self, username) :
+        uploads_path = self.dot + "/database/" + username + "/uploads"
+        shared_path = self.dot + "/database/" + username + "/shared_files"
+        content = {}
+        shared_list = ""
+        upload_list = ""
+        shared_files = os.listdir(shared_path)
+        upload_files = os.listdir(uploads_path)
+        for x in shared_files :
+            if os.path.isfile(shared_path + "/" + x) :
+                shared_list += x + "----------" + str(os.stat(shared_path + "/" + x).st_size) + "----------\n" 
             else :
-                for x in all_files :
-                    if x == file_name :
-                        if not os.path.isdir(os.path.join(file_path, x)) :
-                            new_file_name = "1.0:" + file_name
-                            shutil.move(file_path + "/" + file_name, file_path + "/" + new_file_name)
-                            os.makedirs(file_path + "/" + file_name_dir)
-                            shutil.copy(file_path + "/" + new_file_name, file_path + "/" + file_name_dir )
-                            os.unlink(file_path + '/' + new_file_name)
-                            with open(file_path + "/" + file_name_dir + "/" + "2.0:" + file_name, "wb") as f:
-                                f.write(file_read)
-                        else :
-                            get_versions = os.listdir(os.path.dirname(file_path + '/' + file_name_dir))
-                            get_versions.sort()
-                            last_file = get_versions[-1]
-                            version = float(last_file[:last_file.find(":")])
-                            version += 1
-                            new_file_name = str(version) + last_file[last_file.find(":"):]
-                            with open(file_path + "/" + file_name_dir + "/" + new_file_name, "wb") as f :
-                                f.write(file_read)
-                        break
+                dir_files = os.listdir(shared_path + "/" + x)
+                for y in dir_files :
+                    shared_list += y + "----------"  + str(os.stat(shared_path + "/" + x + "/" + y).st_size) + "----------\n"
+        for x in upload_files :
+            if os.path.isfile(uploads_path + "/" + x) :
+                upload_list += x + "----------" + str(os.stat(uploads_path + "/" + x).st_size) + "----------\n"
+            else :
+                print(upload_files)
+                dir_files = os.listdir(uploads_path + "/" + x)
+                for y in dir_files :
+                    upload_list += y + "----------" + str(os.stat(uploads_path + "/" + x + "/" + y).st_size) + "----------\n"
+        content["uploads"] = upload_list
+        content["shared"] = shared_list
+        return content
+
+    def upload_file(self, username, file_name, file_read, file_type) :
+        file_path = self.dot + "/database/" + username + "/uploads"
+        if os.path.exists(file_path) :
+            all_files = set(os.listdir(file_path))
+            if file_name in all_files :
+              get_versions = os.listdir(file_path + '/' + file_name)
+              get_versions.sort()
+              last_file = get_versions[-1]
+              version = float(last_file[:last_file.find(":")])
+              version += 1
+              new_file_name = str(version) + last_file[last_file.find(":"):]
+              with open(file_path + "/" + file_name + "/" + new_file_name, "wb") as f :
+                f.write(file_read)
+            elif (file_name + file_type) in all_files :
+              new_file_name = "1.0:" + file_name + file_type
+              shutil.move(file_path + "/" + file_name + file_type, file_path + "/" + new_file_name)
+              os.makedirs(file_path + "/" + file_name)
+              shutil.copy(file_path + "/" + new_file_name, file_path + "/" + file_name)
+              os.unlink(file_path + '/' + new_file_name)
+              with open(file_path + "/" + file_name + "/" + "2.0:" + file_name + file_type, "wb") as f:
+                f.write(file_read)
+            else :
+                with open(file_path + "/" + file_name + file_type, "wb") as f :
+                    f.write(file_read)

@@ -8,8 +8,9 @@ from Requests import Requests
 
 class UploadRequest(Requests) :
     def __init__(self, key, message_type, fields, status) :
-        Requests.__init__(self, key, message_type, fields)
+        Requests.__init__(self, key, message_type)
         self.status = status
+        self.fields = fields
 
     def run(self, socket) :
         self.content = {}
@@ -24,8 +25,12 @@ class UploadRequest(Requests) :
         self.content["username"] = self.status["cur_username"]
         self.content["password"] = self.status["cur_password"]
         self.content["upload"] = read_file
-        self.content["file_name"] = filedir[filedir.rfind("/") + 1 :]
-        msg = self.prepare_message(socket, self.message_type)
+        file_total_name = filedir[filedir.rfind("/") + 1 :]
+        file_name = file_total_name[:file_total_name.find(".")]
+        file_type = file_total_name[file_total_name.find("."):]
+        self.content["file_name"] = file_name
+        self.content["file_type"] = file_type
+        msg = self.prepare_message(socket)
         network.send(socket, msg)
         self.response(socket)
 

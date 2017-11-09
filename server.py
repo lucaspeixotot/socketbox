@@ -7,7 +7,7 @@ import network
 from database import Database
 
 class ServerSocket :
-    def __init__(self, host="localhost", port=6789) :
+    def __init__(self, host="", port=6789) :
         self.host = host
         self.port = port
         self.database = Database()
