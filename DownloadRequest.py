@@ -24,7 +24,7 @@ class DownloadRequest(Requests) :
         file_name = raw_input("File name: ")
         print("Have you a path of your preference to the file to be stored? If not, the file will be downloaded in application path, in this case type enter.")
         file_path = raw_input("Type the path here: ")
-        file_path = file_path + "/" if file_path[-1] != "/" else file_path
+        file_path = file_path + "/" if file_path and file_path[-1] != "/" else file_path
         self.content["file_name"] = file_name
         msg = self.prepare_message(socket)
         network.send(socket, msg)

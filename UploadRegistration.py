@@ -24,15 +24,13 @@ class UploadRegistration(Registration) :
             content = "Problemas na identificação do usuário!"
         else :
             try :
-                self.database.upload_file(username, file_name, file_read, file_type)
-                status = "1025"
+                self.database.upload_file(username, file_name, file_read, file_type, "uploads")
+                status = "1014"
                 content = "Upload do arquivo " + file_name + " realizado com sucesso!"
             except :
-                status = "0101"
+                status = "0000"
                 content = "Falha no upload!"
             
         msg = self.ack_construct(content, status, self.response_type)
         network.send(socket, msg)
         print("-----\nStatus - %s\nRequisição de upload realizada com sucesso!\n-----" % status)
-
-        # RESOLVE PROBLEMA DO ENVIO DE UMA IMAGEM E  RESOLVER O PROBLEMA DE ADICIONAR UM ARQUIVO VERSAO 3

@@ -69,32 +69,37 @@ class Database :
         content["shared"] = shared_list
         return content
 
-    def upload_file(self, username, file_name, file_read, file_type) :
-        file_path = self.dot + "/database/" + username + "/uploads"
+    def upload_file(self, username, file_name, file_read, file_type, upload_type) :
+        file_path = self.dot + "/database/" + username + "/" + upload_type
         if os.path.exists(file_path) :
             all_files = set(os.listdir(file_path))
             if file_name in all_files :
               get_versions = os.listdir(file_path + '/' + file_name)
               get_versions.sort()
               last_file = get_versions[-1]
-              version = float(last_file[:last_file.find(":")])
+              version = int(last_file[:last_file.find(":")])
               version += 1
               new_file_name = str(version) + last_file[last_file.find(":"):]
               with open(file_path + "/" + file_name + "/" + new_file_name, "wb") as f :
                 f.write(file_read)
             elif (file_name + file_type) in all_files :
-              new_file_name = "1.0:" + file_name + file_type
+              new_file_name = "1:" + file_name + file_type
               shutil.move(file_path + "/" + file_name + file_type, file_path + "/" + new_file_name)
               os.makedirs(file_path + "/" + file_name)
               shutil.copy(file_path + "/" + new_file_name, file_path + "/" + file_name)
               os.unlink(file_path + '/' + new_file_name)
-              with open(file_path + "/" + file_name + "/" + "2.0:" + file_name + file_type, "wb") as f:
+              with open(file_path + "/" + file_name + "/" + "2:" + file_name + file_type, "wb") as f:
                 f.write(file_read)
             else :
                 with open(file_path + "/" + file_name + file_type, "wb") as f :
                     f.write(file_read)
 
     def download_file(self, download_type, file_name, username) :
+        print("EPA VAMOS ANALISAR")
+        print(download_type)
+        print(file_name)
+        print(username)
+        print("E AGORA JEREMIAS?")
         downloaded = ""
         file_path = self.dot + "/database/" + username + "/" + download_type
         folder_path = file_path + "/" + file_name[file_name.find(":") + 1:file_name.rfind(".")]
