@@ -2,9 +2,11 @@
 
 from Message import Message
 
-class Request :
-    def __init__(self, key):
+class Registration :
+    def __init__(self, key, users):
         self.key = key
+        self.users = users
+        self.response_type = self.key + "_response"
 
     def ack_construct(self, content, status, response_type) :
         header = {}

@@ -13,6 +13,7 @@ def menu_options(status) :
         print("1 : Upload")
         print("2 : Download")
         print("3 : My files")
+        print("4 : Share files")
 
 def create_account_protocol() :
     print("Para fazer uma requisição de criação de conta siga o padrão abaixo:")

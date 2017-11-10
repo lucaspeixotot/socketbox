@@ -1,34 +1,15 @@
 # -*- coding:utf-8 -*-
 
+import view
 import network
-from Request import Request
-from database import Database
+from Message import Message
+from Requests import Requests
 
-class CreateRequest(Request) :
+class CreateRequest(Requests) :
+    def __init__(self, key, message_type, fields) :
+        Requests.__init__(self, key, message_type)
+        self.fields = fields
 
-    def __init__(self, key, users) :
-        Request.__init__(self, key)
-        self.users = users
-        self.response_type = "create_response"
-        self.database = Database()
-        
-    def run(self, body, socket) :
-        username = body["content"]["username"]
-        password = body["content"]["password"]
-        password_confirmation = body["content"]["password_confirmation"]
-
-        if username in self.users:
-            content = "The typed username already exist in the system!"
-            status = "0025"
-        elif password != password_confirmation :
-            content = "The typed passwords are differente!"
-            status = "0017"
-        else :
-            content = "Account created with successful!"
-            status = "1025"
-            self.users[username] = password
-            self.database.create_user(username, password)
-
-        msg = self.ack_construct(content, status, self.response_type)
-        network.send(socket, msg)
-        print("%s - Requisição realizada com sucesso!" % status)
+    def response(self, socket) :
+        body = Requests.response(self, socket)
+        print("%s - %s" % (body["status"], body["content"]))
