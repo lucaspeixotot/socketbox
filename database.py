@@ -93,3 +93,20 @@ class Database :
             else :
                 with open(file_path + "/" + file_name + file_type, "wb") as f :
                     f.write(file_read)
+
+    def download_file(self, download_type, file_name, username) :
+        downloaded = ""
+        file_path = self.dot + "/database/" + username + "/" + download_type
+        folder_path = file_path + "/" + file_name[file_name.find(":") + 1:file_name.rfind(".")]
+        all_files = set(os.listdir(file_path))
+        if file_name in all_files :
+            with open( file_path + "/" + file_name, "rb") as f :
+                downloaded = f.read()
+        elif file_name[file_name.find(":") + 1:file_name.rfind(".")] in all_files :
+            folder_files = set(os.listdir(folder_path))
+            if file_name in folder_files :
+                with open(folder_path + "/" + file_name, "rb") as f :
+                    downloaded = f.read()
+        return downloaded.encode("base64")
+            
+
