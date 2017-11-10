@@ -6,9 +6,10 @@ from UploadRequest import UploadRequest
 from ListFilesRequest import ListFilesRequest
 from DownloadRequest import DownloadRequest
 from ShareFileRequest import ShareFileRequest
+from ClosingClientConnection import ClosingClientConnection
 
 class ParseOptions :
-    def __init__(self, status) :
+    def __init__(self, status, running) :
         self.status = status
         self._LoginRequest = LoginRequest("2", "login", ["username", "password"], self.status)
         self._CreateRequest = CreateRequest("1", "create", ["username", "password", "password_confirmation"])
@@ -16,6 +17,7 @@ class ParseOptions :
         self._ListFilesRequest = ListFilesRequest("3", "list_files", self.status)
         self._DownloadRequest = DownloadRequest("2", "download", self.status)
         self._ShareFileRequest = ShareFileRequest("4", "share_file", self.status)
+        self._ClosingClientConnection = ClosingClientConnection("0", running)
 
         self.unlogged_actions = [(self._LoginRequest.key, self._LoginRequest), (self._CreateRequest.key, self._CreateRequest)]
 
@@ -23,6 +25,8 @@ class ParseOptions :
         self.parse_options = {}
         self.parse_options[0] = {}
         self.parse_options[1] = {}
+        self.parse_options[0]["0"] = self._ClosingClientConnection
+        self.parse_options[1]["0"] = self._ClosingClientConnection
 
         for x in self.unlogged_actions :
             k, v = x

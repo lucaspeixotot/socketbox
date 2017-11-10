@@ -22,7 +22,6 @@ class Requests :
         body = {}
         body["content"] = {}
         header["type"] = self.message_type
-        header["hb"] = ""
         header["ack"] = ""
         body["content"] = self.content
         msg = Message(header, body)

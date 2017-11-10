@@ -10,12 +10,14 @@ def receive(socket, msg_initial='') :
 
     while msg.find(FLAG_END_MESSAGE) == -1 :
         receiving = socket.recv(BUFFER_SIZE)
+        if not receiving :
+            return ['', '']
         msg = msg + receiving
 
-    begin_message_index = msg.find(FLAG_END_MESSAGE) - 1
-    end_message_index = begin_message_index + len(FLAG_END_MESSAGE) 
+    begin_message_index = msg.find(FLAG_END_MESSAGE)
+    end_message_index = begin_message_index + len(FLAG_END_MESSAGE)
     rest = msg[end_message_index:]
-    msg = msg[:begin_message_index+1]
+    msg = msg[:begin_message_index]
     return [msg, rest]
 
 def send(socket, msg) :
@@ -24,4 +26,5 @@ def send(socket, msg) :
     MSG_LEN = len(msg)
     while sended < MSG_LEN :
         sended = socket.send(msg[sended:])
+    return sended == MSG_LEN
     

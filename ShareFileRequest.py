@@ -6,14 +6,11 @@ import network
 
 class ShareFileRequest(Requests) :
     def __init__(self, key, message_type, status) :
-        print("CCCC")
         Requests.__init__(self, key, message_type)
         self.status = status
         self.list_files = ListFilesRequest("3", "list_files", self.status)
-        print("DDDD")
 
     def run(self, socket) :
-        print("AAAA")
         self.content = {}
         self.content["username"] = self.status["cur_username"]
         self.content["password"] = self.status["cur_password"]
