@@ -8,4 +8,4 @@ class ClosingClientConnection() :
     def run(self, sock) :
         sock.close()
         self.running[0] = 0
-        print("Volte sempre ao SocketBox!")
+        print("See you later, bye!")
