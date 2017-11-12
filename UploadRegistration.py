@@ -2,6 +2,7 @@
 
 import os
 import network
+import messages
 from database import Database
 from Registration import Registration
 
@@ -12,6 +13,7 @@ class UploadRegistration(Registration) :
         self.database = Database()
 
     def run(self, body, socket) :
+        messages.begin_registration(self.key, socket)
         file_read = body["content"]["upload"]
         file_read = file_read.decode('base64')
         file_name = body["content"]["file_name"]
@@ -21,16 +23,16 @@ class UploadRegistration(Registration) :
 
         if username not in self.users or self.users[username] != password:
             status = "0000"
-            content = "Problemas na identificação do usuário!"
+            content = "ERROR: The server had problems with the user identification, please try log in again."
         else :
             try :
                 self.database.upload_file(username, file_name, file_read, file_type, "uploads")
                 status = "1014"
-                content = "Upload do arquivo " + file_name + " realizado com sucesso!"
+                content = "SUCCESS: Updated " + file_name + " was successfully completed."
             except :
                 status = "0000"
-                content = "Falha no upload!"
+                content = "ERROR: The server had some problems and your file wasn't able to be uploaded."
             
         msg = self.ack_construct(content, status, self.response_type)
         network.send(socket, msg)
-        print("-----\nStatus - %s\nRequisição de upload realizada com sucesso!\n-----" % status)
+        messages.end_registration(self.key, socket, content)

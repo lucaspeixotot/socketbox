@@ -15,11 +15,12 @@ class UploadRequest(Requests) :
     def run(self, socket) :
         self.content = {}
         try :
-            filedir = raw_input("Digite o diretório COMPLETO do arquivo que deseja enviar: ")
+            filedir = raw_input("Type the complete file directory that you want upload: ")
+            print("Reading file...")
             with open(filedir, "rb") as f :
                 read_file = f.read()
         except :
-            print("O diretório do arquivo digitado não existe!\n")
+            print("ERROR: The typed directory doesn't match with a possible file to be uploaded, pay attention in the next try.")
             return
         read_file = read_file.encode("base64")
         self.content["username"] = self.status["cur_username"]
@@ -31,9 +32,10 @@ class UploadRequest(Requests) :
         self.content["file_name"] = file_name
         self.content["file_type"] = file_type
         msg = self.prepare_message(socket)
+        print("Sending file...")
         network.send(socket, msg)
         self.response(socket)
 
     def response(self, socket) :
         body = Requests.response(self, socket)
-        print("Status " + body["status"] + " -> " + body["content"])
+        print(body["content"])

@@ -30,4 +30,4 @@ class ShareFileRequest(Requests) :
 
     def response(self, socket) :
         body = Requests.response(self, socket)
-        print("Status - %s\n%s" % (body["status"], body["content"]))
+        print(body["content"])

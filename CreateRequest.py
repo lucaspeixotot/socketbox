@@ -12,4 +12,4 @@ class CreateRequest(Requests) :
 
     def response(self, socket) :
         body = Requests.response(self, socket)
-        print("%s - %s" % (body["status"], body["content"]))
+        print(body["content"])

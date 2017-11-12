@@ -41,7 +41,6 @@ class ServerSBProtocol :
         body = message.get_body()
 
         if header["type"] != "" :
-            print("(%s , %s) fez uma requisição %s" % (str(self.host), str(self.port), str(header["type"])))
             self.server_reply.type_registration[header["type"]].run(body, self.socket)
         # elif message.msg["header"]["ack"] != "" :
         #     self.server_reply.ack_registration.run(message.msg["body"], self.socket)

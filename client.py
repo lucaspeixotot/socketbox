@@ -24,7 +24,7 @@ class Client :
         while self.running[0] :
             view.apresentation()
             view.menu_options(self.status["logged"])
-            opt = raw_input("Digite a sua opcao: ")
+            opt = raw_input("Choose your action: ")
             self.parse_options.run(opt, self.client_socket)
         self.client_socket.close()
 

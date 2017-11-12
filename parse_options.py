@@ -7,6 +7,7 @@ from ListFilesRequest import ListFilesRequest
 from DownloadRequest import DownloadRequest
 from ShareFileRequest import ShareFileRequest
 from ClosingClientConnection import ClosingClientConnection
+import messages
 
 class ParseOptions :
     def __init__(self, status, running) :
@@ -37,4 +38,7 @@ class ParseOptions :
             self.parse_options[1][k] = v
 
     def run(self, opt, client_socket) :
-        self.parse_options[self.status["logged"]][opt].run(client_socket)
+        try :
+            self.parse_options[self.status["logged"]][opt].run(client_socket)
+        except KeyError :
+            messages.invalid_opt()
