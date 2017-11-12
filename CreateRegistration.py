@@ -3,6 +3,7 @@
 import network
 from Registration import Registration
 from database import Database
+import messages
 
 class CreateRegistration(Registration) :
 
@@ -11,22 +12,23 @@ class CreateRegistration(Registration) :
         self.database = Database()
         
     def run(self, body, socket) :
+        messages.begin_registration(self.key, socket)
         username = body["content"]["username"]
         password = body["content"]["password"]
         password_confirmation = body["content"]["password_confirmation"]
 
         if username in self.users:
-            content = "The typed username already exist in the system!"
-            status = "0025"
+            content = "ERROR: The typed username already exist in the system!"
+            status = "0000"
         elif password != password_confirmation :
-            content = "The typed passwords are differente!"
-            status = "0017"
+            content = "ERROR: The typed passwords are different!"
+            status = "0000"
         else :
-            content = "Account created with successful!"
-            status = "1025"
+            content = "SUCCESS: Account was created successful!"
+            status = "1014"
             self.users[username] = password
             self.database.create_user(username, password)
 
         msg = self.ack_construct(content, status, self.response_type)
         network.send(socket, msg)
-        print("%s - Requisição realizada com sucesso!" % status)
+        messages.end_registration(self.key, socket, content)

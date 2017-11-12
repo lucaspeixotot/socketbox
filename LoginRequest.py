@@ -12,8 +12,6 @@ class LoginRequest(Requests) :
 
     def response(self, socket) :
         body = Requests.response(self, socket)
-        if body["status"] == "0025" or body["status"] == "0017" :
-            messages.login_not_successfull(body["status"])
-        else :
+        if body["status"] == "1014" :
             self.status["logged"], self.status["cur_username"], self.status["cur_password"] = 1, self.content["username"], self.content["password"]
-            messages.login_successfull()
+        print(body["content"])

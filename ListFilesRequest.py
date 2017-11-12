@@ -23,7 +23,7 @@ class ListFilesRequest(Requests) :
       print("FILE NAME ---------- SIZE")
       print(body["content"]["uploads"])
       print("\nYour shared files:")
-      print("FILE/DIR NAME ---------- SIZE")
+      print("FILE NAME ---------- SIZE")
       print(body["content"]["shared"])
     else :
       print(body["status"] + " - Request failed")

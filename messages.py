@@ -28,17 +28,6 @@ def create_not_successfull(connection, err) :
     msg = msg + err
     connection.send(msg)
 
-def login_successfull(name=None) :
-    print("Login efetuado com sucesso!")
-    if name :
-        print("Bem-vindo", name)
-
-def login_not_successfull(response) :
-    if response == 0 :
-        print("O username digitado não existe!")
-    elif response == 2 :
-        print("Senha incorreta!")
-
 def sending_file() :
     print("Enviando arquivo...")
 
@@ -50,3 +39,21 @@ def receiving_file() :
 
 def end_receiving_file() :
     print("Arquivo recebido com sucesso!")
+
+def invalid_opt() :
+    print("\nWARNING: Your option was invalid, please choose a possible option.\n")
+
+def begin_registration(key, socket) :
+    host, port = socket.getpeername()
+    print("---------------NEW REGISTRATION---------------")
+    print("FROM: %s:%s" % (host, port))
+    print("The server will start the registration: %s request" % (key))
+    print("---------------NEW REGISTRATION---------------\n\n")
+
+def end_registration(key, socket, content) :
+    host, port = socket.getpeername()
+    print("--------------END REGISTRATION----------------")
+    print("FROM: %s:%s" % (host, port))
+    print("REGISTRATION TYPE: %s" % key)
+    print("RESULT: \"%s\"" % content)
+    print("--------------END REGISTRATION----------------\n\n")

@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import network
+import messages
 from Registration import Registration
 
 class LoginRegistration(Registration) :
@@ -9,18 +10,19 @@ class LoginRegistration(Registration) :
         Registration.__init__(self, key, users)
         
     def run(self, body, socket) :
+        messages.begin_registration(self.key, socket)
         username = body["content"]["username"]
         password = body["content"]["password"]
 
         if username in self.users and password == self.users[username] :
-            status = "1025"
-            content = "Usuário logado com sucesso!"
+            status = "1014"
+            content = "SUCCESS: User successfully logged in."
         elif username not in self.users :
-            status = "0025"
-            content = "O usuário digitado não existe no sistema!"
+            status = "0000"
+            content = "ERROR: The typed user doesn't exist in the system."
         else :
-            status = "0017"
-            content = "A senha digitada está incorreta!"
+            status = "0000"
+            content = "ERROR: The types password was incorrect."
         msg = self.ack_construct(content, status, self.response_type)
         network.send(socket, msg)
-        print("-----\nStatus - %s\nRequisição realizada com sucesso!\n-----" % status)
+        messages.end_registration(self.key, socket, content)

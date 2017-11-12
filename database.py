@@ -61,7 +61,6 @@ class Database :
             if os.path.isfile(uploads_path + "/" + x) :
                 upload_list += x + "----------" + str(os.stat(uploads_path + "/" + x).st_size) + "----------\n"
             else :
-                print(upload_files)
                 dir_files = os.listdir(uploads_path + "/" + x)
                 for y in dir_files :
                     upload_list += y + "----------" + str(os.stat(uploads_path + "/" + x + "/" + y).st_size) + "----------\n"
@@ -95,11 +94,6 @@ class Database :
                     f.write(file_read)
 
     def download_file(self, download_type, file_name, username) :
-        print("EPA VAMOS ANALISAR")
-        print(download_type)
-        print(file_name)
-        print(username)
-        print("E AGORA JEREMIAS?")
         downloaded = ""
         file_path = self.dot + "/database/" + username + "/" + download_type
         folder_path = file_path + "/" + file_name[file_name.find(":") + 1:file_name.rfind(".")]

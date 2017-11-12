@@ -13,7 +13,6 @@ class Registration :
         body = {}
         header["type"] = ""
         header["ack"] = response_type
-        header["hb"] = ""
         body["content"] = content
         body["status"] = status
         msg = Message(header, body)

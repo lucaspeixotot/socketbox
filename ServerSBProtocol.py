@@ -14,25 +14,23 @@ class ServerSBProtocol :
         self.socket = socket
         self.addr = addr
         self.users = users
-        self.active = True
-        self.hb_thread = threading.Thread(target = self.check_hb, args = ())
+        self.broken = False
         self.rest_messages = Queue()
         self.rest_messages.put('')
         self.server_reply = ServerReply(self.users)
 
     def run(self) :
-        self.hb_thread.start()
-        while self.active :
+        while not self.broken :
             self.receive_message()
-
-    def check_hb(self) :
-        pass
 
     def send_message(self) :
         pass
 
     def receive_message(self) :
         getting_messages = network.receive(self.socket, self.rest_messages.get())
+        if not getting_messages[0] :
+            self.broken = True
+            return
         self.rest_messages.put(getting_messages[1])
         self.verify_and_reply(getting_messages[0])
 
@@ -43,7 +41,6 @@ class ServerSBProtocol :
         body = message.get_body()
 
         if header["type"] != "" :
-            print("(%s , %s) fez uma requisição %s" % (str(self.host), str(self.port), str(header["type"])))
             self.server_reply.type_registration[header["type"]].run(body, self.socket)
         # elif message.msg["header"]["ack"] != "" :
         #     self.server_reply.ack_registration.run(message.msg["body"], self.socket)

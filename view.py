@@ -1,27 +1,20 @@
 # -*- coding: utf-8 -*-
 def apresentation() :
-    print("--------------------- BEM VINDO AO SOCKET BOX ---------------------")
+    print("--------------------- WELCOME TO SOCKETBOX ---------------------")
 
 def menu_options(status) :
     if status == 0 :
-        print("*** Opcoes:")
-        print("1 : Criar conta")
-        print("2 : Logar")
-        print("3 : Sair\n")
+        print("*** Actions:")
+        print("0 : Exit")
+        print("1 : Sign up")
+        print("2 : Sign in\n")
     elif status == 1 :
-        print("*** Opcoes:")
+        print("*** Actions:")
+        print("0 : Exit")
         print("1 : Upload")
         print("2 : Download")
-        print("3 : My files")
-        print("4 : Share files")
-
-def create_account_protocol() :
-    print("Para fazer uma requisição de criação de conta siga o padrão abaixo:")
-    print("---------- BEGIN CREATE ACCOUNT PROTOCOL ----------")
-    print("USERNAME: YOUR_NAME")
-    print("PASSWORD: YOUR_PASSWORD")
-    print("PASSWORD_CONFIRMATION: YOUR_PASSWORD")
-    print("---------- END CREATE ACCOUNT PROTOCOL ----------\n\n")
+        print("3 : List files")
+        print("4 : Share files\n")
 
 def client_login() :
-    print("Identifique-se")
+    print("Who are you?")
