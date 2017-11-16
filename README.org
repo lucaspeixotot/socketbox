@@ -1,13 +1,31 @@
 *SOCKETBOX PROJECT*
 
-* Introduction
-  Socketbox is a project to computing networking course which have the goal to
-  learn how to implement sockets.
+* Introdução
+  SocketBox é um projeto que foi passado na disciplina de redes de computadores
+  com o objetivo de aprender a implementar e lidar com sockets.
 
-  
-* Message
-  The message have two pieces: header and body. *Every* message *must* have
-  this two pieces and fit into documentation below.
+* Aplicação
+  Minha aplicação tem o objetivo de funcionar como um dropbox. Os usuários
+  logados tem a possibilidade de faze uploads, downloads e compartilhar arquivos
+  com outros usuários. No tocante ao download, o usuário pode fazer o download
+  tanto dos arquivos upados por ele como os arquivos compartilhados com ele.
+  Também é possível ter versionamento de arquivos, arquivos enviados com o mesmo
+  nome receberão um número de versão de acordo com a cronologia de upload.
+
+* Mensagem
+  Temos um protocolo de comunicação, as mensagens são enviadas
+  como um json e são separadas por um *\nend-message\n*. No geral as mensagens
+  tem dois campos principais: header e body. Toda mensagem deve ter esses dois
+  campos e eles devem obedecer a documentação abaixo.
+  #+BEGIN_SRC json
+    {
+	"body": {
+	    "ack": "", 
+	    "type": ""
+	}, 
+	"content": {}
+    }
+  #+END_SRC
 ** Header
    Will guide how the message must be read. hb and ack fields are named
    in this documentation as /special fields/.
@@ -74,3 +92,4 @@
      The body will have the pieces below: 
 
   
+     
