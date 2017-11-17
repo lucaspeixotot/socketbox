@@ -200,6 +200,12 @@
 }
      #+END_SRC
 **** share_file
+     - username/password: usado para identificar o usuário que está fazendo o request;
+     - target: usuário que receberá um arquivo compartihado;
+     - file_name: nome do arquivo a ser compartilhado;
+     - file_type: tipo do arquivo a ser compartilhado;
+     - download_type: de onde o arquivo compartilhado virá, no caso de um
+       share_file request esse campo sempre terá o valor *"uploads"*
      #+BEGIN_SRC json
 {
   "body": {
