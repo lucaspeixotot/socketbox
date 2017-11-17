@@ -25,7 +25,6 @@ class ServerSocket :
         while True :
             while self.clients >= 10 :
                 pass
-            print("to aqui pacato %d", self.clients)
             conn, addr = self.server_socket.accept()
             host, port = conn.getpeername()
             print("Connected =>", host, port)

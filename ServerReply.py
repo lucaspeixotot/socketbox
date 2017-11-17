@@ -17,10 +17,9 @@ class ServerReply :
         list_files_registration = ListFilesRegistration("list_files", self.users)
         download_registration = DownloadRegistration("download", self.users)
         share_file_registration = ShareFileRegistration("share_file", self.users)
-        # self.ack_request = AckRequest()
-        # self.hb_request = HbRequest()
+
         all_type_registration = [create_registration, login_registration, upload_registration, list_files_registration, download_registration, share_file_registration]
-        # all_type_requests = [create_request, login_request, upload_request, download_request]
+
         self.type_registration = {}
 
         for x in all_type_registration :

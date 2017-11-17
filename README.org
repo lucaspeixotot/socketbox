@@ -101,7 +101,7 @@
       o cliente trata de salvar no devido local. Segue um exemplo de resposta
       para um list_files:
 
-      #+BEGIN_SRC
+      #+BEGIN_SRC json
 {
   "body": {
     "content": {
@@ -118,7 +118,8 @@
       #+END_SRC
 
 *** Type ativo
-    Nos itens seguintes seguirão exemplos de pedidos request do cliente para o servidor.
+    Nos itens seguintes seguirão exemplos de pedidos request do cliente para o
+    servidor, com as suas respectivas explicações dos conteúdos do body.
 
 **** login
      - username: username do usuário que quer entrar na conta;
@@ -139,6 +140,10 @@
 #+END_SRC
 
 **** upload
+     - username/password: usado para identificar o usuário que está fazendo o request;
+     - file_name: nome do arquivo a ser upado;
+     - file_type: tipo do arquivo a ser upado;
+     - upload: arquivo lido em bits e convertido para base64.
      #+BEGIN_SRC json
 {
   "body": {
@@ -158,7 +163,8 @@
      #+END_SRC
 
 **** list_files
-     #+BEGIN_SRC
+     - username/password: usado para identificar o usuário que está fazendo o request.
+     #+BEGIN_SRC json
 {
   "body": {
     "content": {
@@ -173,7 +179,11 @@
 }
      #+END_SRC
 **** download
-     #+BEGIN_SRC
+     - username/password: usado para identificar o usuário que está fazendo o request;
+     - file_name: nome do arquivo a ser feito o download;
+     - download_type: indica se o arquivo será baixado dos arquivos
+       compartilhados ou dos arquivos upados.
+     #+BEGIN_SRC json
 {
   "body": {
     "content": {
@@ -208,10 +218,34 @@
   }
 }
      #+END_SRC
-     
 
+* O que poderia ser implementado mais?
+  Inicialmente eu pensava em colocar codificação huffman em cada arquivo enviado
+  e tratar melhor o versionamento dos arquivos, contudo, não conseguiria fazer
+  em tempo ábil, mas será implementado em futuras versões. Alguns detalhes como
+  auto-completar quando o usuário estiver digitando o diretório também deveriam
+  ser implementados, mas acabei não dando prioridade a isso, e sim ao
+  entendimento de como o socket e suas comunicações funcionam, as perfumarias do
+  projeto não foram meus objetivos principais, portanto algumas coisas como
+  digitar os diretórios dos arquivos para fazer upload podem se tornar cansativos.
 
-
-  
-     
-     
+* Dificuldades no projeto
+  No começo eu estava montando uma arquitetura para o projeto que não fazia o
+  menor sentido, minhas mensagens chegavam duplicadas, tentava fazer um fluxo de
+  usuário tanto no servidor como no cliente. Aos poucos fui percebendo que não
+  fazia sentido, o fluxo do usuário no lado do cliente não deve ser visto no
+  servidor, o servidor deve receber apenas os pedidos de requests e tratá-los de
+  modo que a aplicação faça sentido. Diante disso, decidi fazer um refatoramento
+  em todo o código e tentar implementar um protocolo de comunicação, de modo que
+  eu não precisasse me preocupar com mensagens duplicadas. Daí veio a ideia de
+  utilizar json estruturado em header e body, visto que o json tem um bom
+  suporte em python e é uma estrutura para envio de mensagens bastante clara.
+  Além disso precisava de marcações para delimitar o começo e o término das
+  mensagens. A partir desse refatoramento meu código já ficou bastante genérico,
+  e as funções foram seguindo com tranquilidade. Na parte do upload tive
+  problema com o upload de algumas imagens JPEG que dava erro na hora de
+  codificação para o envio do json, com isso precisei ficar utilizando encodes e
+  decodes para base64, o que eu tive a impressão que os arquivos ficaram mais
+  pesados. Verifiquei que alguns arquivos muito grandes, demoravam um tempo
+  muito grande para serem enviados, não tive tempo de corrigir essa latência e
+  estava em fase de observação para ver o que realmente estava havendo.
