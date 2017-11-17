@@ -22,7 +22,6 @@ def receive(socket, msg_initial='') :
 
 def send(socket, msg) :
     msg = msg.prepare_to_send()
-    print(msg)
     sended = 0
     MSG_LEN = len(msg)
     while sended < MSG_LEN :
