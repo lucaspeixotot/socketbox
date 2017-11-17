@@ -16,80 +16,202 @@
   Temos um protocolo de comunicação, as mensagens são enviadas
   como um json e são separadas por um *\nend-message\n*. No geral as mensagens
   tem dois campos principais: header e body. Toda mensagem deve ter esses dois
-  campos e eles devem obedecer a documentação abaixo.
+  campos e eles devem obedecer a documentação que seguirá nos próximos tópicos.
+  Segue abaixo um exemplo de um tipo de uma solicitação de criação de conta:
   #+BEGIN_SRC json
-    {
-	"body": {
-	    "ack": "", 
-	    "type": ""
-	}, 
-	"content": {}
+{
+  "body": {
+    "content": {
+      "username": "joao", 
+      "password": "123456", 
+      "password_confirmation": "123456"
     }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "create"
+  }
+}
   #+END_SRC
+  Veremos que a depender do tipo da mensagem, temos um cenário diferente no body.
 ** Header
-   Will guide how the message must be read. hb and ack fields are named
-   in this documentation as /special fields/.
-*** content-length
-   Contains the body length message.
+   O header irá guiar como a mensagem deve ser lida.
 *** type
-   This field tell us what are the message type. There are some possibilities
-   for this field:
+    Este campo nos dirá qual o tipo da mensagem. Existem algumas possibilidades
+   para esse campo:
 **** create
-    When a client wants to create an account in SocketBox.
+     Quando um cliente quer criar uma conta no SocketBox.
 **** login
-    This is a request to sign in the SocketBox. 
+     Caso o cliente queira fazer o login em alguma conta no SocketBox.
 **** upload
-    The user upload a file into your account. 
+     Esse campo é utilizado quando um cliente logado deseja fazer algum upload
+    de arquivo para o SocketBox.
 **** download
-    The user download a file that is contained in your uploaded or shared files.
+     Caso o usuário queira fazer um download de um arquivo(upado ou
+    compartilhado) contido em sua conta, ele o fará por meio desse tipo de mensagem.
 **** list-files
-    List all uploaded and shared files. 
+     Lista todos os arquivos upados e compartilhados.
 **** share-file
-    Share a file with another account. 
-*** hb
-   When this field is different of " " it means that the server is trying to confirm
-   the connection with the client.
+     Compartilha um arquivo upado com outra conta dentro do SocketBox.
 *** ack
-   When this field is different of " " it means that the server or client are
-   confirming some previous message.
+    Esse campo é utilizado basicamente pelo servidor, para indicar ao cliente o
+   resultado das requisições feitas. Quando temos o campo type no header com
+   algum conteúdo, temos o ack vázio *" "*, e vice-versa.
 
 ** Body
-  This piece of the message will have the content of the message itself. Based
-  on message type we have different bodies.
-*** Special fields activated
-    When the special fields are activated we will ignore the type field.
-**** hb
-     We will have just some message to generate a echo in the server and client
-     sockets in order to ensure that connection is not broken. 
-**** ack
-     Depending of the previous message typed we will have different behaviors.
-     The ack body will have two parts *status* and *content*.
-     When the previous message type is:
-***** create and login
-****** Successful
-       The body will have the status *1014* with a successful message that it
-      means that the create or login request was made with succesful. 
-****** Failed
-       The body will have the status *0025* and *0017* that it means that the
-       create or login request failed because an existent username or typed username
-       doesn't exist(login) and the password and password confirmation are
-       differents or the typed password was wrong(login), respectively. Of
-       cource, with a failed message explain it.
-***** upload and download
-****** Successful
-       The body will have the status *1014* with a sucessful message that it
-       means that the upload or download was made with sucessful.
-****** Failed
-       The body will have the status *0000* with a message explain what happens.
-***** list_files
-****** Successful
-       The body will have the status *1024* and the content will have the upload
-       and shared files listed in your account.
-****** Failed 
-       The body will have the status *0000* with a message explain what happens.
-*** Special fields desactivated 
-**** create
-     The body will have the pieces below: 
+   Essa parte da mensagem representa, de fato, o conteúdo que será necessário
+  para que os requests enviados pelo cliente sejam processados de maneira
+  correta. Baseado no tipo da mensagem teremos diferentes padrões de body. No
+  geral teremos dois cenários, o primeiro é quando o ack está ativo e o type
+  vazio, o segundo é quando o ack está vazio e o type está ativo. Ativo lê-se
+  com algum conteúdo diferente de vazio("").
+*** ACK ativo
+    Quando o campo ack no header tiver algum valor, e consequentemente o tipo
+    estiver vazio, significa que o servidor está respondendo algum pedido do
+    cliente. A depender do pedido teremos conteúdos diferentes, mas uma coisa
+    converge para todos: caso o pedido tenha sido realizado com sucesso teremos
+    um status com número *1014*, caso contrário teremos um status *0000*. Status
+    *1014* teram mensagens padronizadas, já status *0000* terão mensagens a
+    depender do erro ocorrido. Segue abaixo exemplos de respostas ack para os
+    diferentes tipos:
+**** create/upload/share_file/login
+      Basicamente todos esses tipos de mensagem tem um ack parecido com o
+      abaixo, o que muda é que para cada um deles teriamos upload_response,
+      login_reponse, etc e obviamente teríamos mensagens diferentes. Caso
+      ocorresse algum erro durante a execução também receberiamos o mesmo
+      padrão, entretanto agora com um status de erro e uma mensagem explicando o
+      erro a medida do possível.
+      #+BEGIN_SRC json
+{
+  "body": {
+    "content": "SUCCESS: Account was created successful!", 
+    "status": "1014"
+  }, 
+  "header": {
+    "ack": "create_response", 
+    "type": ""
+  }
+}
+      #+END_SRC
+**** list_files/download
+      Já esses dois tipos funcionam de forma diferente, ao invés de nossa
+      mensagem de sucesso temos o conteúdo que desejavamos quando fizemos os
+      requests, ou seja, para o list_files recebemos uma lista com os arquivos
+      upados ou compartilhados, já o download recebemos o arquivo do servidor e
+      o cliente trata de salvar no devido local. Segue um exemplo de resposta
+      para um list_files:
+
+      #+BEGIN_SRC
+{
+  "body": {
+    "content": {
+      "shared": "", 
+      "uploads": "teste.txt----------33----------\n"
+    }, 
+    "status": "1025"
+  }, 
+  "header": {
+    "ack": "list_files_response", 
+    "type": ""
+  }
+}
+      #+END_SRC
+
+*** Type ativo
+    Nos itens seguintes seguirão exemplos de pedidos request do cliente para o servidor.
+
+**** login
+     - username: username do usuário que quer entrar na conta;
+     - password: senha do usuário.
+#+BEGIN_SRC json
+{
+  "body": {
+    "content": {
+      "username": "pereira", 
+      "password": "123"
+    }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "login"
+  }
+}
+#+END_SRC
+
+**** upload
+     #+BEGIN_SRC json
+{
+  "body": {
+    "content": {
+      "username": "pereira", 
+      "file_name": "teste", 
+      "password": "123", 
+      "upload": "dXBsb2FkIGRlIGFycXVpdm8gcGFyYQpvIFJFQURNRSEK\n", 
+      "file_type": ".txt"
+    }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "upload"
+  }
+}
+     #+END_SRC
+
+**** list_files
+     #+BEGIN_SRC
+{
+  "body": {
+    "content": {
+      "username": "pereira", 
+      "password": "123"
+    }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "list_files"
+  }
+}
+     #+END_SRC
+**** download
+     #+BEGIN_SRC
+{
+  "body": {
+    "content": {
+      "username": "pereira", 
+      "file_name": "teste.txt", 
+      "download_type": "uploads", 
+      "password": "123"
+    }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "download"
+  }
+}
+     #+END_SRC
+**** share_file
+     #+BEGIN_SRC json
+{
+  "body": {
+    "content": {
+      "username": "pereira", 
+      "target": "lucas", 
+      "file_type": ".txt", 
+      "file_name": "teste", 
+      "download_type": "uploads", 
+      "password": "123"
+    }
+  }, 
+  "header": {
+    "ack": "", 
+    "type": "share_file"
+  }
+}
+     #+END_SRC
+     
+
+
 
   
+     
      
